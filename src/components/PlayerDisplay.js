@@ -9,30 +9,36 @@ class PlayerDisplay extends React.Component{
 
     this.state = {
       name: "",
-      photo: ""
+      photo: "",
+      ref: ""
     }
   }
 
   componentDidMount(){
-    const profileRef = firebaseDB.ref("userProfiles").child(this.props.playerId);
+    const profileRef = firebaseDB.ref("userProfiles");
 
-    profileRef.once("value", data => {
+    profileRef.child(this.props.playerId).once("value", data => {
       this.setState({
         name: data.val().displayName,
-        photo: data.val().photo
+        photo: data.val().photo,
+        ref: profileRef
       })
     })
   }
 
-  componentWillReceiveProps(nextProps){
-    const profileRef = firebaseDB.ref("userProfiles").child(nextProps.playerId);
-
-    profileRef.once("value", data => {
-      this.setState({
-        name: data.val().displayName,
-        photo: data.val().photo
+  componentDidUpdate(prevProps){
+    if(prevProps.playerId !== this.props.playerId){
+      this.state.ref.child(this.props.playerId).once("value", data => {
+        this.setState({
+          name: data.val().displayName,
+          photo: data.val().photo
+        })
       })
-    })
+    }
+  }
+
+  componentWillUnmount(){
+    this.state.ref.off();
   }
 
   render(){

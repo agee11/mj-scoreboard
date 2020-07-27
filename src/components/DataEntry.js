@@ -8,20 +8,33 @@ class DataEntry extends React.Component{
 
     this.state = {
       name: "",
-      value: ""
+      value: "",
+      ref: ""
     }
   }
 
   componentDidMount(){
-    const profileRef = firebaseDB.ref("userProfiles").child(this.props.name);
+    const profileRef = firebaseDB.ref("userProfiles").child(this.props.playerId);
 
     profileRef.once("value", data => {
       this.setState({
         name: data.val().displayName,
-        value: this.props.value
+        value: this.props.value,
+        ref: profileRef
       })
     })
   }
+
+  componentDidUpdate(prevProps){
+
+    this.state.ref.once("value", data => {
+      this.setState({
+        name: data.val().displayName,
+        value: this.props.value
+      })
+    });
+  }
+
   render(){
     return <td>
     {this.state.name}<br/>

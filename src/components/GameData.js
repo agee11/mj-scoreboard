@@ -45,7 +45,11 @@ class GameData extends React.Component{
   }
 
   spectateGame(){
-this.props.history.push("/Scoreboard/"+this.props.roomId, {spectator: true});
+    if(this.state.status === "Playing"){
+      this.props.history.push("/Scoreboard/"+this.props.roomId, {spectator: true});
+    }else if (this.state.status === "Closed"){
+      this.props.history.push("/Result/"+this.props.roomId, {spectator: true});
+    }
   }
 
   render(props){
@@ -54,7 +58,7 @@ this.props.history.push("/Scoreboard/"+this.props.roomId, {spectator: true});
     <h3>{this.state.date}</h3>
     <p><strong>Status: </strong>{this.state.status}</p>
     {this.state.status === "Open" && <><Button onClick={this.joinGame} varient="Primary">Join</Button><br/></>}
-    {this.state.status === "Playing" && <Button onClick={this.spectateGame} varient="Secondary">Spectate</Button>}
+    {this.state.status !== "Open" && <Button onClick={this.spectateGame} varient="Secondary">Spectate</Button>}
     </div>
   }
 }

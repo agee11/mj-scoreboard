@@ -53,18 +53,26 @@ class Scoreboard extends React.Component{
           record: updatedScores,
           total: total
         });
-
+        roomRef.child("players/"+player.key).update({
+          Total: total
+        });
       });
       this.setState({
         scores: playerContainer.sort((a,b) => b.total-a.total),
         ref: roomRef
       });
     })
+
+    roomRef.child("status").on("value", state => {
+      if(state.val() === "Closed"){
+        this.props.history.push("/Result/"+this.state.roomId, {data: this.state.scores});
+      }
+    })
   }
 
   componentWillUnmount(){
-    this.state.ref.child("players").off();
     this.state.ref.child("status").off();
+    this.state.ref.child("players").off();
   }
 
   addScore(){
@@ -87,7 +95,7 @@ class Scoreboard extends React.Component{
           <td>{index+1}</td>
           <td><PlayerDisplay playerId={player.uid}/></td>
           <td><strong>Total<br/>{player.total}</strong></td>
-          {player.record.map((entry,index) => <DataEntry key={index} name={entry.targetId} value={entry.value}/>)}
+          {player.record.map((entry,index) => <DataEntry key={index} playerId={entry.targetId} value={entry.value}/>)}
           </tr>
       })}
     </tbody>

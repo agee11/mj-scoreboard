@@ -1,5 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
+import {firebaseDB} from "../firebase";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -11,10 +12,11 @@ class ResultScreen extends React.Component{
     super(props);
 
     this.state = {
-      data: this.props.location.state.data,
+      data: this.props.location.state.data || [],
       payingPlayers: [],
       billAmount: "",
-      payout: []
+      payout: [],
+      ref: ""
     }
 
     this.handleBill = this.handleBill.bind(this);
@@ -23,14 +25,52 @@ class ResultScreen extends React.Component{
   }
 
   componentDidMount(){
+    const roomRef = firebaseDB.ref("gamerooms/"+this.props.match.params.roomId);
     let players = []
+
+    //If spectating a closed game, grab data from server
+    if(this.state.data.length === 0){
+      let dataArray = [];
+      roomRef.child("players").once("value", data => {
+        Object.keys(data.val()).forEach(key => {
+          dataArray.push({
+            uid: key,
+            total: data.child(key+"/Total").val()
+          })
+        });
+      })
+      dataArray.sort((a,b) => b.total - a.total);
+      this.setState({
+        data: dataArray
+      }, () => {
+        this.state.data.forEach(player =>{
+          players.push(player.uid);
+        });
+      });
+    }
+
     this.state.data.forEach(player =>{
       players.push(player.uid);
-    })
+    });
 
-    this.setState({
-      payingPlayers: players
+    roomRef.once("value", data => {
+      if(data.hasChild("bill")){
+        this.setState({
+          billAmount: data.val().bill,
+          payingPlayers: players,
+          ref: roomRef
+        }, () => this.calcBill());
+      }else{
+        this.setState({
+          payingPlayers: players,
+          ref: roomRef
+        });
+      }
     })
+    // this.setState({
+    //   payingPlayers: players,
+    //   ref: roomRef
+    // });
   }
 
   componentWillUnmount(){
@@ -67,20 +107,22 @@ class ResultScreen extends React.Component{
     [0, 0, 0, 0.1, 0.1, 0.15, 0.2, 0.2, 0.25],
     [0, 0, 0, 0.05, 0.1, 0.1, 0.15, 0.15, 0.2, 0.25]];
 
-    let calcBill = [];
+    let brokedownBill = [];
     const amount = this.state.billAmount;
+
+    this.state.ref.update({bill: amount});
 
     for(let i = 0; i < size; i++){
       let payment = amount * breakDown[size-3][i];
-      calcBill.push(payment.toFixed(2));
+      brokedownBill.push(payment.toFixed(2));
     }
     this.state.data.forEach((player, index) => {
       if(!this.state.payingPlayers.includes(player.uid)){
-        calcBill.splice(index, 0, 0);
+        brokedownBill.splice(index, 0, 0);
       }
     })
     this.setState({
-      payout: calcBill
+      payout: brokedownBill
     })
   }
 
@@ -91,10 +133,10 @@ class ResultScreen extends React.Component{
     <Form.Group as={Form.Row}>
       <Form.Label column>Bill:</Form.Label>
       <Col>
-      <Form.Control as="input" type="number" placeholder="9.99" onChange={this.handleBill}/>
+      <Form.Control as="input" type="number" placeholder="9.99" onChange={this.handleBill} value={this.state.billAmount}/>
       </Col>
       <Col>
-      <Button variant="primary" onClick={this.calcBill}>Submit</Button>
+      <Button variant="primary" onClick={this.calcBill} disabled={this.props.location.state.spectator}>Submit</Button>
       </Col>
     </Form.Group>
     </Form>

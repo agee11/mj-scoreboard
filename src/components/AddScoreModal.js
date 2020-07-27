@@ -13,7 +13,8 @@ class AddScoreModal extends React.Component{
 
     this.state = {
       target: [],
-      points: 3
+      points: 3,
+      ref: ""
     }
 
     this.submitData = this.submitData.bind(this);
@@ -21,8 +22,13 @@ class AddScoreModal extends React.Component{
     this.handleTargetChange = this.handleTargetChange.bind(this);
   }
 
+  componentDidMount(){
+    this.setState({
+      ref: firebaseDB.ref("gamerooms/"+this.props.roomId+"/players")
+    })
+  }
+
   submitData(){
-    const gameroomRef = firebaseDB.ref("gamerooms/"+this.props.roomId+"/players");
 
     let points = parseInt(this.state.points);
 
@@ -31,10 +37,10 @@ class AddScoreModal extends React.Component{
       if(points > 10){
         points = 10;
       }
-      gameroomRef.child(this.state.target[0]).push({
+      this.state.ref.child(this.state.target[0]).push({
         [firebaseAuth.currentUser.uid]: Math.pow(2, points+2) * -1
       });
-      gameroomRef.child(firebaseAuth.currentUser.uid).push({
+      this.state.ref.child(firebaseAuth.currentUser.uid).push({
         [this.state.target[0]]: Math.pow(2,points+2)
       });
 //Self draw win
@@ -43,14 +49,13 @@ class AddScoreModal extends React.Component{
         points = 11;
       }
       this.state.target.forEach(player => {
-        gameroomRef.child(player).push({
+        this.state.ref.child(player).push({
           [firebaseAuth.currentUser.uid]: Math.pow(2, points+1) * -1
         });
-        gameroomRef.child(firebaseAuth.currentUser.uid).push({
+        this.state.ref.child(firebaseAuth.currentUser.uid).push({
           [player]: Math.pow(2, points+1)
         });
       })
-
     }
 
     this.setState({
@@ -62,7 +67,6 @@ class AddScoreModal extends React.Component{
   }
 
   handlePointChange(event){
-    console.log(event.target.value);
     this.setState({
       points: event.target.value
     });
@@ -79,9 +83,12 @@ class AddScoreModal extends React.Component{
       })
     }
   }
-  // {this.props.players.map((player,index) => {
-  //   return <Form.Check id={player.uid||""} key={index} type="checkbox" label=<PlayerDisplay playerId={player.uid||""}/> onChange={this.handleTargetChange} disabled={(player.uid||"") === firebaseAuth.currentUser.uid}/>
-  // })}
+
+  componentWillUnmount(){
+    this.state.ref.off();
+  }
+
+
   render(){
     return <Modal show={this.props.show} onHide={this.props.onHide} centered aria-labelledby="contained-modal-title-vcenter">
     <Modal.Header closeButton>

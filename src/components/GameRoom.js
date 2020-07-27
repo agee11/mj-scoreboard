@@ -43,6 +43,7 @@ class GameRoom extends React.Component{
 
   componentWillUnmount(){
     this.state.ref.child("status").off();
+    this.state.ref.child("players").off();
   }
 
   startGame(){

@@ -19,24 +19,24 @@ class Login extends React.Component {
 //Write user data to server when logged in.
   onLogin() {
 
-    firebaseAuth.signInWithPopup(firebaseGoogleAuth).then(() => {
+    firebaseAuth.signInWithPopup(firebaseGoogleAuth).then((result) => {
       this.setState({
-        userName: firebaseAuth.currentUser.displayName,
-        photoURL: firebaseAuth.currentUser.photoURL,
-        uid: firebaseAuth.currentUser.uid
+        userName: result.user.displayName,
+        photoURL: result.user.photoURL,
+        uid: result.user.uid
       });
 
       const ref = firebaseDB.ref("userProfiles");
       ref.once("value").then(data => {
         if(data.child(firebaseAuth.currentUser.uid).exists()){
           ref.child(firebaseAuth.currentUser.uid).update({
-            photo: this.state.photoURL,
-            displayName: this.state.userName
+            photo: result.user.photoURL,
+            displayName: result.user.displayName
           })
         }else{
-          data.child(firebaseAuth.currentUser.uid).set({
-            photo: this.state.photoURL,
-            displayName: this.state.userName,
+          ref.child(firebaseAuth.currentUser.uid).set({
+            photo: result.user.photoURL,
+            displayName: result.user.displayName,
             lifeTimeScore: 0,
             gamesWon: 0,
             gamesLost: 0,
