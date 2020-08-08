@@ -73,14 +73,16 @@ class AddScoreModal extends React.Component{
   }
 
   handleTargetChange(event){
-    if(event.target.checked){
+    if(!event.target.classList.contains("selected")){
+      event.target.classList.add("selected");
       this.setState({
-        target: [...this.state.target, event.target.id]
-      })
+        target: [...this.state.target, event.target.attributes.playerid.value]
+      });
     }else{
+      event.target.classList.remove("selected");
       this.setState({
-        target: this.state.target.filter(x => x !== event.target.id)
-      })
+        target: this.state.target.filter(x => x !== event.target.attributes.playerid.value)
+      });
     }
   }
 
@@ -97,16 +99,19 @@ class AddScoreModal extends React.Component{
     <Modal.Body>
 
     <Form>
-      <Form.Group controlId="formTargets">
-        <Form.Label><strong>Players</strong></Form.Label>
+    <Form.Label><strong>Players</strong></Form.Label>
+      <Form.Group controlId="formTargets" className="modal-profile-layout">
         {this.props.players.map((player,index) => {
-          return <Form.Check id={player.uid} key={index} type="checkbox" label=<PlayerDisplay playerId={player.uid}/> onChange={this.handleTargetChange} disabled={(player.uid) === firebaseAuth.currentUser.uid}/>
+          if(player.uid !== firebaseAuth.currentUser.uid){
+            return <PlayerDisplay className="modal-display" key={index} playerId={player.uid} onClick={this.handleTargetChange}/>
+          }
         })}
 
       </Form.Group>
       <Form.Group controlId="formPoints">
         <Form.Label><strong>Points Won</strong></Form.Label>
         <Form.Control defaultValue={3} as="select" htmlSize="5" custom onChange={this.handlePointChange}>
+          <option>2</option>
           <option>3</option>
           <option>4</option>
           <option>5</option>

@@ -42,8 +42,8 @@ class PlayerDisplay extends React.Component{
   }
 
   render(){
-    return <div>
-    <img className="profilePicture" src={this.state.photo} alt="profile"/>
+    return <div className="flex-display">
+    <img className="profilePicture" playerid={this.props.playerId} src={this.state.photo} alt="profile" onClick={this.props.onClick}/>
     <p>{this.state.name}</p>
     </div>
   }

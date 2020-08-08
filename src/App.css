@@ -18,7 +18,9 @@
 }
 
 #root {
-    background-color: #282c34;
-    color: white;
-    height: 100vh;
+  background-color: #282c34;
+  color: white;
+  height: fit-content;
+  min-width: 360px;
+  min-height: 100vh;
 }

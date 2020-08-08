@@ -1,6 +1,7 @@
 .profilePicture {
   width: 50px;
   height: 50px;
+  border-radius: 100%;
 }
 
 hr {
@@ -17,4 +18,30 @@ hr {
 
 Button {
   margin: 5px
+}
+
+.modal-profile-layout{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-around;
+  max-height: 400px;
+  text-align: center;
+}
+
+.modal-profile-layout .profilePicture{
+  width: 60px;
+  height: 60px;
+}
+
+.modal-profile-layout .flex-display{
+  flex-basis: 33%;
+}
+
+.selected {
+  border-width: 5px;
+  border-style: solid;
+  border-color: red;
+  filter: opacity(50%);
 }
