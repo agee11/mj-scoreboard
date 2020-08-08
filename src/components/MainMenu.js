@@ -24,7 +24,8 @@ class MainMenu extends React.Component {
     const newRoom = roomRef.push({
       date: time,
       status: "Open",
-      players: {[firebaseAuth.currentUser.uid]: {Total: 0}, tester1: {Total: 0}, tester2: {Total: 0}, tester3: {Total: 0}}
+      players: {[firebaseAuth.currentUser.uid]: {Total: 0}}
+      //players: {[firebaseAuth.currentUser.uid]: {Total: 0}, tester1: {Total: 0}, tester2: {Total: 0}, tester3: {Total: 0}}
     })
 
     this.props.history.push("/GameRoom/" + newRoom.key);
