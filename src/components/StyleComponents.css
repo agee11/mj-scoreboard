@@ -45,3 +45,11 @@ Button {
   border-color: red;
   filter: opacity(50%);
 }
+
+.negative{
+  color: #FE4C40;
+}
+
+.positive{
+  color: #66FF66;
+}

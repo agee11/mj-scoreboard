@@ -67,14 +67,10 @@ class ResultScreen extends React.Component{
         });
       }
     })
-    // this.setState({
-    //   payingPlayers: players,
-    //   ref: roomRef
-    // });
   }
 
   componentWillUnmount(){
-
+    this.state.ref.off();
   }
 
   handleBill(event){
@@ -111,11 +107,13 @@ class ResultScreen extends React.Component{
     const amount = this.state.billAmount;
 
     this.state.ref.update({bill: amount});
-
+    //Set the payout amounts based on ranking and number of paying players
     for(let i = 0; i < size; i++){
       let payment = amount * breakDown[size-3][i];
       brokedownBill.push(payment.toFixed(2));
     }
+
+    //Add NPC player and set their payout to 0
     this.state.data.forEach((player, index) => {
       if(!this.state.payingPlayers.includes(player.uid)){
         brokedownBill.splice(index, 0, 0);

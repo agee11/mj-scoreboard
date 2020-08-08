@@ -35,8 +35,12 @@ class DataEntry extends React.Component{
     });
   }
 
+  componentWillUnmount(){
+    this.state.ref.off();
+  }
+
   render(){
-    return <td>
+    return <td className={this.state.value > 0 ? "positive" : "negative"}>
     {this.state.name}<br/>
     {this.state.value}
     </td>

@@ -92,7 +92,7 @@ class AddScoreModal extends React.Component{
 
 
   render(){
-    return <Modal show={this.props.show} onHide={this.props.onHide} centered aria-labelledby="contained-modal-title-vcenter">
+    return <Modal animation="false" show={this.props.show} onHide={this.props.onHide} centered aria-labelledby="contained-modal-title-vcenter">
     <Modal.Header closeButton>
     <strong>Add Score</strong>
     </Modal.Header>
