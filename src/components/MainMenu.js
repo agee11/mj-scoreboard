@@ -15,17 +15,23 @@ class MainMenu extends React.Component {
     this.props.history.push("/Lobby");
   }
 
-  createGameRoom(){
+  createGameRoom(event){
     let time = new Date().toDateString() + " " + new Date().toLocaleTimeString();
     time = time.split(" ");
     time = time.join("-");
 
     const roomRef = firebaseDB.ref("gamerooms/");
+    let playerData;
+    if(event.target.id === "newRoomButton"){
+      playerData = {[firebaseAuth.currentUser.uid]: {Total: 0}}
+    }else if (event.target.id === "testRoomButton"){
+      console.log(event.target.id);
+      playerData = {[firebaseAuth.currentUser.uid]: {Total: 0}, tester1: {Total: 0}, tester2: {Total: 0}, tester3: {Total: 0}}
+    }
     const newRoom = roomRef.push({
       date: time,
       status: "Open",
-      //players: {[firebaseAuth.currentUser.uid]: {Total: 0}}
-      players: {[firebaseAuth.currentUser.uid]: {Total: 0}, tester1: {Total: 0}, tester2: {Total: 0}, tester3: {Total: 0}}
+      players: playerData
     })
 
     this.props.history.push("/GameRoom/" + newRoom.key);
@@ -35,7 +41,8 @@ class MainMenu extends React.Component {
     return <div className="BasicScreen">
     <h1> Main Menu </h1>
     <Button onClick={this.joinGameRoom} varient="primary">Join Game</Button><br/>
-    <Button onClick={this.createGameRoom} varient = "primary"> Create Game </Button>
+    <Button id="newRoomButton" onClick={this.createGameRoom} varient = "primary"> Create Game </Button><br/>
+    <Button id="testRoomButton" onClick={this.createGameRoom} varient = "primary"> Test Game </Button>
     </div>
   }
 }
