@@ -1,68 +1,82 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MJ-Scoreboard App
 
-## Available Scripts
+The MJ-Scoreboard is a web app designed to keep track of multiple player scores in a game of MJ.  The app utilizes google authentication and a Firebase backend to track all player activity.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+* Google Auth
+* User created game rooms to join
+* Unique point counter system
+* Dynamic and responsive scoreboard
+* Bill calculator as part of the Results screen
+* Opt out option for players not participating in wagers
+* Players can spectate active scoreboards
+* Players can revisit the results of older games
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Scoring Breakdown
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Minimum point to win is **3** with values starting at 32 and increases by multiples of **2**. Points are capped at **10**.
 
-### `npm test`
+### Single Loser
+| Points | Value |
+|--|--|
+| 3 | 32 |
+| 4 | 64 |
+| 5 | 128 |
+| 6 | 256 |
+| 7 | 512 |
+| 8 | 1024 |
+| 9 | 2048 |
+| 10 | 4096 |
+| 10+ | 4096 |
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Self-Draw / Multiple Losers
+| Points | Value |
+|--|--|
+| 3 | 16 |
+| 4 | 32 |
+| 5 | 64 |
+| 6 | 128 |
+| 7 | 256 |
+| 8 | 512 |
+| 9 | 1024 |
+| 10 | 2048 |
+| 10+ | 4096 |
 
-### `npm run build`
+## Bill Calculator Breakdown
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Breakdown percentages are based on how many players are participating
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+| Players | 1st | 2nd | 3rd | 4th | 5th | 6th | 7th | 8th | 9th | 10th |
+|--|--|--|--|--|--|--|--|--|--|--|
+| 2 | 0 | 100% |
+| 3 | 0 | 30% | 70% |
+| 4 | 0 | 20% | 30% | 50% |
+| 5 | 0 | 15% | 20% | 30% | 35% |
+| 6 | 0 | 0 | 15% | 20% | 30% | 35% |
+| 7 | 0 | 0 | 10% | 15% | 20% | 25% | 30% |
+| 8 | 0 | 0 | 0 |  10% | 15% | 20% | 25% | 30% |
+| 9 | 0 | 0 | 0 | 10% | 10% | 15% | 20% | 20% | 25% |
+| 10 | 0 | 0 | 0 | 5% | 10% | 10% | 15% | 15% | 20% | 25% |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Setup
 
-### `npm run eject`
+1. Clone the github repository.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. Install [Node.js](https://nodejs.org/en/).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Use the package manager [npm](https://www.npmjs.com/package/dotenv) to install Country Information App.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+npm install
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+4. Use the command prompt to launch the app on a local sever
+```bash
+npm start
+```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
